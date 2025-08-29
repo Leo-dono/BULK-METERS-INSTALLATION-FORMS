@@ -1010,7 +1010,7 @@
             const region = formData.get('Region') || 'N/A';
             const subject = encodeURIComponent(`Bulk Meter Installation Form: ${serial} - Region: ${region}`);
             const body = encodeURIComponent("Please find the downloaded PDF attached.\n\n" + messageBody);
-            const mailtoLink = `mailto:bulkmeters@gmail.com?subject=${subject}&body=${body}`;
+            const mailtoLink = `mailto:bulkmeters@example.com?subject=${subject}&body=${body}`;
             
             window.open(mailtoLink, '_blank');
             emailSent = true;
@@ -1032,8 +1032,8 @@
             
             const specialRegions = ['Tema', 'Accra West', 'Accra East', 'Western Region', 'Central', 'Volta', 'ATMA Production'];
             const numbers = specialRegions.includes(region)
-                ? ['233242589038', '233556063964']
-                : ['233576061792', '233504471920'];
+                ? ['233000000001', '233000000000']
+                : ['233000000002', '233000000003'];
             
             const formData = new FormData(form);
             let message = "BULK METER INSTALLATION FORM\n\n";
