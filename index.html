@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Bulk Meter Installation Form</title>
+    <!-- Include jsPDF and html2canvas libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c7da0;
+            --secondary: #01497c;
+            --accent: #61a5c2;
+            --success: #40916c;
+            --dark-bg: #2d3e50;
+            --dark-card: #34495e;
+            --dark-border: #4a6572;
+            --text-primary: #e6e6e6;
+            --text-secondary: #a0a0b0;
+            --warning: #f39c12;
+            --error: #e74c3c;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #253341 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--dark-card);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--dark-border);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+            display: inline-block;
+        }
+
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 25px;
+        }
+
+        .top-sections {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .top-sections {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .form-section {
+            background: linear-gradient(145deg, #3a506b, #2c3e50);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--dark-border);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            color: var(--success);
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.95em;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group input[type="tel"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            background-color: #4a6572;
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            outline: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="date"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group input[type="tel"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .disclaimer {
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-top: 25px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .button-group {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 16px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(44, 125, 160, 0.3);
+        }
+
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(44, 125, 160, 0.4);
+        }
+
+        .action-button:active {
+            transform: translateY(0);
+        }
+
+        .action-button.email {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        .action-button.whatsapp {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .action-button.new-form {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            grid-column: 1 / -1;
+        }
+
+        .action-button.reset {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            grid-column: 1 / -1;
+        }
+
+        .action-button:disabled {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .action-button:disabled:hover {
+            transform: none;
+            box-shadow: 0 4px 15px rgba(44, 125, 160, 0.3);
+        }
+
+        .hidden-section {
+            display: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 1000;
+            font-size: 0.9em;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .notification.warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .notification.show {
+            opacity: 1;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        
+        .modal-content {
+            background-color: var(--dark-card);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--dark-border);
+        }
+        
+        .modal-buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .modal-button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            flex: 1;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-button.primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .whatsapp-numbers {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .whatsapp-number {
+            display: block;
+            margin: 12px 0;
+            padding: 15px;
+            background-color: #4a6572;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: 1px solid var(--dark-border);
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .whatsapp-number:hover {
+            background-color: #567086;
+            transform: translateX(5px);
+        }
+
+        .form-section.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a0a0b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-position: calc(100% - 15px) center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 45px;
+        }
+
+        @media (max-width: 767px) {
+            body {
+                padding: 15px;
+            }
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .main-content-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        .submission-status {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #4a6572;
+            color: var(--text-secondary);
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .status-icon.completed {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .completion-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1002;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+        }
+
+        .completion-content {
+            background-color: var(--dark-card);
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--dark-border);
+        }
+        
+        .completion-animation {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: var(--success);
+        }
+
+        .completion-message {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+        }
+
+        .main-content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 992px) {
+            .main-content-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        
+        .captcha-question {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: var(--accent);
+            flex: 1;
+        }
+        
+        .captcha-input {
+            max-width: 100px;
+        }
+        
+        .captcha-validation {
+            margin-top: 10px;
+            font-size: 0.9em;
+            display: none;
+        }
+        
+        .captcha-validation.correct {
+            color: var(--success);
+            display: block;
+        }
+        
+        .captcha-validation.incorrect {
+            color: var(--error);
+            display: block;
+        }
+        
+        .right-side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .remarks-section {
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="form-container">
+        <header>
+            <h1><i class="fas fa-tachometer-alt"></i> BULK METER INSTALLATION FORM</h1>
+            <p>Complete this form for every meter installation</p>
+        </header>
+
+        <form id="meter-form" novalidate>
+            <div class="form-grid">
+                <!-- Top Sections: Region and Meter Category -->
+                <div class="top-sections">
+                    <div class="form-section">
+                        <h2 class="section-title"><i class="fas fa-map-marker-alt"></i> Region</h2>
+                        <div class="form-group">
+                            <label for="region"><strong>Region *</strong></label>
+                            <select id="region" name="Region" required>
+                                <option value="">-- Select Region --</option>
+                                <option value="Accra West">Accra West</option>
+                                <option value="Accra East">Accra East</option>
+                                <option value="Ashanti South">Ashanti South</option>
+                                <option value="Ashanti North">Ashanti North</option>
+                                <option value="Ashanti Production">Ashanti Production</option>
+                                <option value="ATMA Production">ATMA Production</option>
+                                <option value="Central">Central</option>
+                                <option value="Eastern">Eastern</option>
+                                <option value="Northern">Northern</option>
+                                <option value="Tema">Tema</option>
+                                <option value="Upper East">Upper East</option>
+                                <option value="Upper West">Upper West</option>
+                                <option value="Volta">Volta</option>
+                                <option value="Western Region">Western Region</option>
+                                <option value="Brong Ahafo Region">Brong Ahafo Region</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2 class="section-title"><i class="fas fa-filter"></i> Meter Category</h2>
+                        <div class="form-group">
+                            <label for="meter-category"><strong>Category *</strong></label>
+                            <select id="meter-category" name="Meter Category" required>
+                                <option value="">-- Please Select --</option>
+                                <option value="Industrial Meter">Industrial Meter</option>
+                                <option value="Production Meter">Production Meter</option>
+                                <option value="Border Meter">Border Meter</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section hidden-section full-width" id="dynamic-section">
+                    <div id="industrial-fields" class="hidden-section">
+                        <h2 class="section-title"><i class="fas fa-industry"></i> Industrial Information</h2>
+                        <div class="form-group">
+                            <label for="name-of-industry"><strong>Name of Industry *</strong></label>
+                            <input type="text" id="name-of-industry" name="Name of Industry">
+                        </div>
+                        <div class="form-group">
+                            <label for="account-number"><strong>Account Number *</strong></label>
+                            <input type="text" id="account-number" name="Account Number">
+                        </div>
+                    </div>
+
+                    <div id="production-fields" class="hidden-section">
+                        <h2 class="section-title"><i class="fas fa-water"></i> Production Information</h2>
+                        <div class="form-group">
+                            <label for="name-of-station"><strong>Name of Station *</strong></label>
+                            <input type="text" id="name-of-station" name="Name of Station">
+                        </div>
+                        <div class="form-group">
+                            <label for="process-point"><strong>Process Point *</strong></label>
+                            <select id="process-point" name="Process Point">
+                                <option value="">-- Please Select --</option>
+                                <option value="Raw">Raw</option>
+                                <option value="Settled">Settled</option>
+                                <option value="Backwash">Backwash</option>
+                                <option value="Final">Final</option>
+                                <option value="Booster Inlet">Booster Inlet</option>
+                                <option value="Booster Outlet">Booster Outlet</option>
+                                <option value="Borehole">Borehole</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="transmission-fields" class="hidden-section">
+                        <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Flow Direction</h2>
+                        <div class="form-group">
+                            <label for="transmission-from"><strong>From *</strong></label>
+                            <input type="text" id="transmission-from" name="Transmission From">
+                        </div>
+                        <div class="form-group">
+                            <label for="transmission-to"><strong>To *</strong></label>
+                            <input type="text" id="transmission-to" name="Transmission To">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="main-content-grid">
+                    <div>
+                        <div class="form-section">
+                            <h2 class="section-title"><i class="fas fa-info-circle"></i> Core Meter Information</h2>
+                            <div class="form-group">
+                                <label for="district"><strong>District</strong></label>
+                                <input type="text" id="district" name="District">
+                            </div>
+                            <div class="form-group">
+                                <label for="serial-number"><strong>Meter Serial Number *</strong></label>
+                                <input type="text" id="serial-number" name="Meter Serial Number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="meter-type"><strong>Meter Type *</strong></label>
+                                <select id="meter-type" name="Meter Type" required>
+                                    <option value="">-- Please Select --</option>
+                                    <option value="Electromagnetic">Electromagnetic</option>
+                                    <option value="Ultrasonic">Ultrasonic</option>
+                                    <option value="Clamp On">Clamp On</option>
+                                    <option value="Mechanical">Mechanical</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="meter-brand"><strong>Meter Brand</strong></label>
+                                <input type="text" id="meter-brand" name="Meter Brand">
+                            </div>
+                            <div class="form-group">
+                                <label for="meter-module"><strong>Meter Module</strong></label>
+                                <input type="text" id="meter-module" name="Meter Module">
+                            </div>
+                            <div class="form-group">
+                                <label for="meter-size"><strong>Meter Size *</strong></label>
+                                <input type="text" id="meter-size" name="Meter Size" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pipe-size"><strong>Pipe Size</strong></label>
+                                <input type="text" id="pipe-size" name="Pipe Size">
+                            </div>
+                            <div class="form-group">
+                                <label for="pipe-material"><strong>Pipe Material</strong></label>
+                                <select id="pipe-material" name="Pipe Material">
+                                    <option value="">-- Select Material --</option>
+                                    <option value="Steel">Steel</option>
+                                    <option value="HDPE">HDPE</option>
+                                    <option value="Galvanized">Galvanized</option>
+                                    <option value="PVC">PVC</option>
+                                    <option value="Asbestos">Asbestos</option>
+                                    <option value="Cast Iron">Cast Iron</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="location"><strong>Meter Location *</strong></label>
+                                <input type="text" id="location" name="Meter Location" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gps-coords"><strong>GPS Coordinates</strong></label>
+                                <input type="text" id="gps-coords" name="GPS Coordinates">
+                            </div>
+                            <div class="form-group">
+                                <label for="install-date"><strong>Installation Date *</strong></label>
+                                <input type="date" id="install-date" name="Installation Date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="installation-standard"><strong>Standard of Installation *</strong></label>
+                                <select id="installation-standard" name="Standard of Installation" required>
+                                    <option value="">-- Please Select --</option>
+                                    <option value="Standard">Standard</option>
+                                    <option value="Substandard">Substandard</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="right-side-panel">
+                        <div class="form-section">
+                            <h2 class="section-title"><i class="fas fa-user-hard-hat"></i> Installation Supervisor</h2>
+                            <div class="form-group">
+                                <label for="supervisor-name"><strong>Supervisor's Name *</strong></label>
+                                <input type="text" id="supervisor-name" name="Supervisor's Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="supervisor-contact"><strong>Supervisor's Contact *</strong></label>
+                                <input type="tel" id="supervisor-contact" name="Supervisor's Contact" required>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2 class="section-title"><i class="fas fa-user-tie"></i> Officer Details</h2>
+                            <div class="form-group">
+                                <label for="officer-name"><strong>Officer's Name *</strong></label>
+                                <input type="text" id="officer-name" name="Officer's Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="officer-contact"><strong>Officer's Contact *</strong></label>
+                                <input type="tel" id="officer-contact" name="Officer's Contact" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="officer-position"><strong>Position *</strong></label>
+                                <input type="text" id="officer-position" name="Position" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="submission-date"><strong>Date of Submission *</strong></label>
+                                <input type="date" id="submission-date" name="Date of Submission" required>
+                            </div>
+                        </div>
+
+                        <div class="form-section remarks-section">
+                            <h2 class="section-title"><i class="fas fa-comment"></i> Remarks</h2>
+                            <div class="form-group">
+                                <label for="remarks"><strong>Remarks</strong></label>
+                                <textarea id="remarks" name="Remarks" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section full-width">
+                    <h2 class="section-title"><i class="fas fa-shield-alt"></i> Security Verification</h2>
+                    <div class="captcha-container">
+                        <div class="captcha-question" id="captcha-question">What is 5 + 3?</div>
+                        <div class="form-group captcha-input">
+                            <input type="number" id="captcha-answer" placeholder="Answer" required>
+                            <button type="button" id="validate-captcha" class="action-button" style="padding: 10px; margin-top: 10px;">
+                                <i class="fas fa-check"></i> Verify
+                            </button>
+                        </div>
+                    </div>
+                    <div class="captcha-validation" id="captcha-validation"></div>
+                </div>
+            </div>
+            
+            <div class="submission-status">
+                <div class="status-item">
+                    <div class="status-icon" id="email-status">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="status-label">Email</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-icon" id="whatsapp-status">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="status-label">WhatsApp</div>
+                </div>
+            </div>
+            
+            <p class="disclaimer"><em>Fields marked with * are mandatory. Please ensure all information is accurate.</em></p>
+            
+            <div class="button-group">
+                <button type="button" class="action-button email" id="send-email-button" disabled><i class="fas fa-envelope"></i> Send via Email</button>
+                <button type="button" class="action-button whatsapp" id="send-whatsapp-button" disabled><i class="fab fa-whatsapp"></i> Send via WhatsApp</button>
+                <button type="button" class="action-button new-form hidden-section" id="new-form-button"><i class="fas fa-plus"></i> New Form</button>
+                <button type="button" class="action-button reset" id="reset-button"><i class="fas fa-undo"></i> Reset Form</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="completion-overlay" id="completion-overlay">
+        <div class="completion-content">
+            <div class="completion-animation">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="completion-message">Form submitted successfully!</div>
+            <button type="button" class="action-button new-form" id="new-form-completion-button"><i class="fas fa-plus"></i> Create New Form</button>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+    
+    <div id="picture-reminder-modal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-camera"></i> Reminder: Attach Pictures</h2>
+            <p>Please remember to attach the downloaded PDF and clear pictures of the installation.</p>
+            <div class="modal-buttons">
+                <button class="modal-button primary" id="reminder-understood-btn">Understood</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="whatsapp-numbers-modal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fab fa-whatsapp"></i> Select WhatsApp Number</h2>
+            <p>Click a number to open WhatsApp. Please send to all contacts.</p>
+            <div class="whatsapp-numbers" id="whatsapp-numbers-list"></div>
+            <div class="modal-buttons">
+                <button class="modal-button primary" id="cancel-whatsapp-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- STATE MANAGEMENT ---
+        let emailSent = false;
+        let whatsappSent = false;
+        let captchaAnswer = null;
+        let captchaValidated = false;
+        let clickedWhatsAppNumbers = new Set();
+        let pdfGeneratedThisSession = false;
+
+        // --- DOM ELEMENTS ---
+        const form = document.getElementById('meter-form');
+        const notification = document.getElementById('notification');
+        const emailStatus = document.getElementById('email-status');
+        const whatsappStatus = document.getElementById('whatsapp-status');
+        const newFormButton = document.getElementById('new-form-button');
+        const sendEmailButton = document.getElementById('send-email-button');
+        const sendWhatsAppButton = document.getElementById('send-whatsapp-button');
+        const captchaQuestion = document.getElementById('captcha-question');
+        const captchaAnswerInput = document.getElementById('captcha-answer');
+        const captchaValidationDiv = document.getElementById('captcha-validation');
+        const dynamicSection = document.getElementById('dynamic-section');
+        const industrialFields = document.getElementById('industrial-fields');
+        const productionFields = document.getElementById('production-fields');
+        const transmissionFields = document.getElementById('transmission-fields');
+        const installationStandardSelect = document.getElementById('installation-standard');
+        const remarksField = document.getElementById('remarks');
+
+        // --- CORE FUNCTIONS ---
+
+        function showNotification(message, isSuccess, isWarning = false) {
+            notification.textContent = message;
+            notification.className = 'notification';
+            if (isWarning) {
+                notification.classList.add('warning');
+            } else {
+                notification.classList.add(isSuccess ? 'success' : 'error');
+            }
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 5000);
+        }
+
+        function updateStatusIndicators() {
+            emailStatus.classList.toggle('completed', emailSent);
+            emailStatus.innerHTML = emailSent ? '<i class="fas fa-check"></i>' : '<i class="fas fa-envelope"></i>';
+            
+            whatsappStatus.classList.toggle('completed', whatsappSent);
+            whatsappStatus.innerHTML = whatsappSent ? '<i class="fas fa-check"></i>' : '<i class="fab fa-whatsapp"></i>';
+
+            if (emailSent && whatsappSent) {
+                document.getElementById('completion-overlay').style.display = 'flex';
+                newFormButton.classList.remove('hidden-section');
+            } else {
+                newFormButton.classList.add('hidden-section');
+            }
+        }
+        
+        function validateForm() {
+            let isValid = true;
+            form.querySelectorAll('[required]:not([disabled])').forEach(field => {
+                if (field.closest('.hidden-section')) {
+                    return;
+                }
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = 'var(--error)';
+                } else {
+                    field.style.borderColor = '';
+                }
+            });
+
+            if (installationStandardSelect.value === 'Substandard' && !remarksField.value.trim()) {
+                isValid = false;
+                remarksField.style.borderColor = 'var(--error)';
+                showNotification('Remarks are required for Substandard installations.', false);
+            }
+
+            if (!isValid && !(installationStandardSelect.value === 'Substandard' && !remarksField.value.trim())) {
+                showNotification('Please fill all required fields marked with *', false);
+            }
+            return isValid;
+        }
+
+        // --- CAPTCHA LOGIC ---
+
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            captchaAnswer = num1 + num2;
+            captchaQuestion.textContent = `What is ${num1} + ${num2}?`;
+            captchaAnswerInput.value = '';
+            captchaValidationDiv.className = 'captcha-validation';
+        }
+
+        function validateCaptcha() {
+            const userAnswer = parseInt(captchaAnswerInput.value);
+            if (userAnswer === captchaAnswer) {
+                captchaValidationDiv.textContent = '✓ Verification successful!';
+                captchaValidationDiv.className = 'captcha-validation correct';
+                captchaValidated = true;
+                sendEmailButton.disabled = false;
+                sendWhatsAppButton.disabled = false;
+            } else {
+                captchaValidationDiv.textContent = '✗ Incorrect answer. Please try again.';
+                captchaValidationDiv.className = 'captcha-validation incorrect';
+                captchaValidated = false;
+                sendEmailButton.disabled = true;
+                sendWhatsAppButton.disabled = true;
+                generateCaptcha();
+            }
+        }
+
+        // --- PDF GENERATION ---
+
+        async function generateAndHandlePdf() {
+            if (pdfGeneratedThisSession) return true;
+            if (!validateForm()) return false;
+
+            const container = document.getElementById('form-container');
+            const serialNumber = document.getElementById('serial-number').value || 'FORM';
+            const region = document.getElementById('region').value || 'REGION';
+            const { jsPDF } = window.jspdf;
+
+            try {
+                const canvas = await html2canvas(container, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#34495e'
+                });
+                
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const imgProps = pdf.getImageProperties(imgData);
+                const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+                heightLeft -= pdf.internal.pageSize.getHeight();
+
+                while (heightLeft > 0) {
+                    position = -heightLeft;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+                    heightLeft -= pdf.internal.pageSize.getHeight();
+                }
+                
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                if (isMobile) {
+                    const pdfDataUri = pdf.output('datauristring');
+                    const newWindow = window.open(pdfDataUri, '_blank');
+                    if(!newWindow) {
+                        showNotification('Popup blocked! Please allow popups to view the PDF.', false);
+                        return false;
+                    }
+                    showNotification('PDF opened in new tab. You can save or share it from there.', true, true);
+                } else {
+                    pdf.save(`_${serialNumber}_${region}_BulkMeterForm.pdf`);
+                    showNotification('PDF downloaded successfully!', true);
+                }
+
+                pdfGeneratedThisSession = true;
+                return true;
+            } catch (error) {
+                console.error("PDF Generation Error:", error);
+                showNotification('Failed to generate PDF. See console for details.', false);
+                return false;
+            }
+        }
+
+        // --- SENDING LOGIC ---
+
+        async function handleSendEmail() {
+            if (!captchaValidated) {
+                showNotification('Please complete the security verification first.', false);
+                return;
+            }
+            
+            const pdfHandled = await generateAndHandlePdf();
+            if (!pdfHandled) return;
+
+            const formData = new FormData(form);
+            let messageBody = "BULK METER INSTALLATION FORM\n\n";
+            formData.forEach((value, key) => {
+                if (value) messageBody += `${key}: ${value}\n`;
+            });
+            
+            const serial = formData.get('Meter Serial Number') || 'N/A';
+            const region = formData.get('Region') || 'N/A';
+            const subject = encodeURIComponent(`Bulk Meter Installation Form: ${serial} - Region: ${region}`);
+            const body = encodeURIComponent("Please find the downloaded PDF attached.\n\n" + messageBody);
+            const mailtoLink = `mailto:bulkmeters@gmail.com?subject=${subject}&body=${body}`;
+            
+            window.open(mailtoLink, '_blank');
+            emailSent = true;
+            updateStatusIndicators();
+        }
+
+        async function handleSendWhatsApp() {
+            if (!captchaValidated) {
+                showNotification('Please complete the security verification first.', false);
+                return;
+            }
+
+            const pdfHandled = await generateAndHandlePdf();
+            if (!pdfHandled) return;
+
+            const region = document.getElementById('region').value;
+            const whatsappNumbersList = document.getElementById('whatsapp-numbers-list');
+            whatsappNumbersList.innerHTML = '';
+            
+            const specialRegions = ['Tema', 'Accra West', 'Accra East', 'Western Region', 'Central', 'Volta', 'ATMA Production'];
+            const numbers = specialRegions.includes(region)
+                ? ['233242589038', '233556063964']
+                : ['233576061792', '233504471920'];
+            
+            const formData = new FormData(form);
+            let message = "BULK METER INSTALLATION FORM\n\n";
+            formData.forEach((value, key) => {
+                if (value) message += `*${key}*: ${value}\n`;
+            });
+            const whatsappMessage = encodeURIComponent(message);
+
+            numbers.forEach(number => {
+                const link = document.createElement('a');
+                link.className = 'whatsapp-number';
+                link.href = `https://wa.me/${number}?text=${whatsappMessage}`;
+                link.target = '_blank';
+                link.innerHTML = `<i class="fab fa-whatsapp"></i> +${number}`;
+                link.onclick = () => {
+                    clickedWhatsAppNumbers.add(number);
+                    if (clickedWhatsAppNumbers.size === numbers.length) {
+                        whatsappSent = true;
+                        updateStatusIndicators();
+                    }
+                };
+                whatsappNumbersList.appendChild(link);
+            });
+            
+            document.getElementById('whatsapp-numbers-modal').style.display = 'flex';
+        }
+
+        // --- FORM AND UI LOGIC ---
+
+        function resetForm() {
+            form.reset();
+            
+            emailSent = false;
+            whatsappSent = false;
+            captchaValidated = false;
+            pdfGeneratedThisSession = false;
+            clickedWhatsAppNumbers.clear();
+            
+            dynamicSection.classList.add('hidden-section');
+            industrialFields.classList.add('hidden-section');
+            productionFields.classList.add('hidden-section');
+            transmissionFields.classList.add('hidden-section');
+            
+            remarksField.required = false;
+            remarksField.style.borderColor = '';
+            
+            updateStatusIndicators();
+            generateCaptcha();
+            
+            sendEmailButton.disabled = true;
+            sendWhatsAppButton.disabled = true;
+            
+            document.getElementById('completion-overlay').style.display = 'none';
+            showNotification('Form has been reset.', true, true);
+        }
+
+        function toggleDynamicFields() {
+            const category = document.getElementById('meter-category').value;
+            const fieldsToShow = {
+                'Industrial Meter': industrialFields,
+                'Production Meter': productionFields,
+                'Border Meter': transmissionFields
+            };
+
+            dynamicSection.querySelectorAll('input, select').forEach(input => input.disabled = true);
+
+            dynamicSection.classList.add('hidden-section');
+            Object.values(fieldsToShow).forEach(field => field.classList.add('hidden-section'));
+
+            if (fieldsToShow[category]) {
+                fieldsToShow[category].classList.remove('hidden-section');
+                dynamicSection.classList.remove('hidden-section');
+                fieldsToShow[category].querySelectorAll('input, select').forEach(input => input.disabled = false);
+            }
+            
+            form.querySelectorAll('#dynamic-section [name]').forEach(input => input.required = false);
+            if (fieldsToShow[category]) {
+                fieldsToShow[category].querySelectorAll('[name]').forEach(input => input.required = true);
+            }
+        }
+
+        // --- INITIALIZATION ---
+
+        function init() {
+            generateCaptcha();
+            
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('submission-date').value = today;
+            document.getElementById('install-date').value = today;
+            
+            toggleDynamicFields();
+            
+            document.getElementById('meter-category').addEventListener('change', toggleDynamicFields);
+            document.getElementById('validate-captcha').addEventListener('click', validateCaptcha);
+            
+            installationStandardSelect.addEventListener('change', (e) => {
+                if (e.target.value === 'Substandard') {
+                    remarksField.required = true;
+                    remarksField.style.borderColor = 'var(--warning)';
+                    showNotification('Remarks are now required.', false, true);
+                } else {
+                    remarksField.required = false;
+                    remarksField.style.borderColor = '';
+                }
+            });
+
+            let lastButtonClicked = null;
+            sendEmailButton.addEventListener('click', () => {
+                if (validateForm()) {
+                    lastButtonClicked = 'email';
+                    document.getElementById('picture-reminder-modal').style.display = 'flex';
+                }
+            });
+            sendWhatsAppButton.addEventListener('click', () => {
+                if (validateForm()) {
+                    lastButtonClicked = 'whatsapp';
+                    document.getElementById('picture-reminder-modal').style.display = 'flex';
+                }
+            });
+
+            document.getElementById('reminder-understood-btn').addEventListener('click', () => {
+                document.getElementById('picture-reminder-modal').style.display = 'none';
+                if (lastButtonClicked === 'email') {
+                    handleSendEmail();
+                } else if (lastButtonClicked === 'whatsapp') {
+                    handleSendWhatsApp();
+                }
+                lastButtonClicked = null;
+            });
+            
+            document.getElementById('cancel-whatsapp-btn').addEventListener('click', () => {
+                document.getElementById('whatsapp-numbers-modal').style.display = 'none';
+            });
+            
+            document.getElementById('reset-button').addEventListener('click', resetForm);
+            document.getElementById('new-form-button').addEventListener('click', resetForm);
+            document.getElementById('new-form-completion-button').addEventListener('click', resetForm);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

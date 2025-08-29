@@ -1,0 +1,29 @@
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor configs
+.vscode/
+.idea/
+*.code-workspace
+
+# Build artifacts (future-proofing)
+node_modules/
+dist/
+build/
+.cache/
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.*
+
+# Generated files
+*.pdf
+
+# Misc
+*.swp
+*.swo
